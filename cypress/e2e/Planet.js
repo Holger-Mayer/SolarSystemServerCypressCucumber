@@ -2,8 +2,14 @@ const { When, Then, Given } = require("@badeball/cypress-cucumber-preprocessor")
 
 const planets = ["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"];
 
+Given("I reset the data", () => {
+  cy.request("GET", "http://localhost:8080/api/test/reset").then((response) => {
+    expect(response.status).to.eq(200)
+  })
+});
 
-When("I launch the  website", () => {
+
+Given("I launch the  website", () => {
   cy.visit("http://localhost:8080/home");
 });
 
@@ -24,6 +30,14 @@ When("I  submit the planet", () => {
   cy.get('#addplanet').click()
 });
 
+When("I select the planet {string}", (name) => {
+  cy.contains(name).click()
+});
+
+When("I press the delete button", (name) => {
+  cy.contains('Delete').click()
+});
+
 Then("I should see a list of 9 known planets", () => {
   planets.forEach((name) => cy.contains(name));
 });
@@ -35,4 +49,14 @@ Then("I should see a create Planet button", () => {
 
 Then("I should see the {string} in the list", (name) => {
   cy.contains(name);
+});
+
+Then("I should see a list of known planets without {string}", (deletedname) => {
+  planets.forEach((name) => {
+    if (name === deletedname) {
+      cy.root().should('not.contain', deletedname);
+    } else {
+      cy.contains(name)
+    }
+  });
 });
