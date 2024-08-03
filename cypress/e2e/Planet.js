@@ -22,8 +22,12 @@ When("I enter position {int}", (position) => {
   cy.get('#id').type(position).should('have.value', position)
 });
 
-When("I  enter name {string}", (name) => {
+When("I enter name {string}", (name) => {
   cy.get('#name').type(name).should('have.value', name)
+});
+
+When("I enter a diameter {string}", (diameter) => {
+  cy.get('#diameter').type(diameter).should('have.value', diameter)
 });
 
 When("I  submit the planet", () => {
@@ -59,4 +63,13 @@ Then("I should see a list of known planets without {string}", (deletedname) => {
       cy.contains(name)
     }
   });
+});
+
+Then("I verify the state {string} with {string}", (state, name) => {
+  if (state === "true") {
+      cy.contains(name)
+    } else {
+      cy.contains("Add new planet")
+    }
+    
 });
