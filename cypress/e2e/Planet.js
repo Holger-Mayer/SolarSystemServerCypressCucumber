@@ -1,4 +1,15 @@
+/// <reference types="cypress" />
+
+import PlanetList_PO from "../support/page_objects/PlanetList_PO";
+import AddPlanet_PO
+ from "../support/page_objects/AddPlanet_PO";
+import PlanetDetail_PO from "../support/page_objects/PlanetDetail_PO";
+
 const { When, Then, Given } = require("@badeball/cypress-cucumber-preprocessor");
+
+const planetListPage = new PlanetList_PO();
+const addPlanetPage = new AddPlanet_PO();
+const planetDetailPage = new PlanetDetail_PO();
 
 const planets = ["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"];
 
@@ -10,59 +21,53 @@ Given("I reset the data", () => {
 
 
 Given("I launch the  website", () => {
-  cy.visit("http://localhost:8080/home");
+  planetListPage.navigate("");
 });
 
 When("I press the add planet button", () => {
-  cy.get('.btn').first().should('have.text', 'Add planet').click();
+  planetListPage.addPlanetButtonClick();
 });
 
 
 When("I enter position {int}", (position) => {
-  cy.typeAndVerify("#id",position)
+ addPlanetPage.setPosition(position)
  
 
 When("I enter name {string}", (name) => {
-  cy.typeAndVerify("#name",name)
+  addPlanetPage.setName(name)
 });
 
 When("I enter a diameter {string}", (diameter) => {
-  cy.typeAndVerify("#diameter",diameter)
+  addPlanetPage.setDiameter(diameter)
 });
 
 When("I  submit the planet", () => {
-  cy.get('#addplanet').click()
+  addPlanetPage.submitData()
 });
 
 When("I select the planet {string}", (name) => {
-  cy.contains(name).click()
+ planetPageList.selectPlanetFromList(name)
 });
 
 When("I press the delete button", (name) => {
-  cy.contains('Delete').click()
+  planetDetailPage.deletePlanet()
 });
 
 Then("I should see a list of 9 known planets", () => {
-  planets.forEach((name) => cy.contains(name));
+  planetListPage.verifyOriginalNinePlanetsInList()
 });
 
 
 Then("I should see a create Planet button", () => {
-  cy.get('.btn').first().should('have.text', 'Add planet')
+  planetListPage.verifyAddPlanetButtonExists()
 });
 
 Then("I should see the {string} in the list", (name) => {
-  cy.contains(name);
+  planetListPage.verifyPlanetinList(name)
 });
 
 Then("I should see a list of known planets without {string}", (deletedname) => {
-  planets.forEach((name) => {
-    if (name === deletedname) {
-      cy.root().should('not.contain', deletedname);
-    } else {
-      cy.contains(name)
-    }
-  });
+   planetListPage.verifyOriginalNinePlanetsInListWithout(deletedname)
 });
 
 Then("I verify the state {string} with {string}", (state, name) => {
