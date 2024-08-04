@@ -19,15 +19,15 @@ When("I press the add planet button", () => {
 
 
 When("I enter position {int}", (position) => {
-  cy.get('#id').type(position).should('have.value', position)
-});
+  cy.typeAndVerify("#id",position)
+ 
 
 When("I enter name {string}", (name) => {
-  cy.get('#name').type(name).should('have.value', name)
+  cy.typeAndVerify("#name",name)
 });
 
 When("I enter a diameter {string}", (diameter) => {
-  cy.get('#diameter').type(diameter).should('have.value', diameter)
+  cy.typeAndVerify("#diameter",diameter)
 });
 
 When("I  submit the planet", () => {
